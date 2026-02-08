@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For You ❤️</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #ff758c, #ff7eb3);
+        color: white;
+        overflow-x: hidden;
+      }
+
+      section {
+        min-height: 100vh;
+        padding: 40px 20px;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      section.active {
+        display: flex;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+      }
+
+      button {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 30px;
+        font-size: 1rem;
+        cursor: pointer;
+        background: white;
+        color: #ff4f81;
+        font-weight: bold;
+        transition: transform 0.2s;
+      }
+
+      button:active {
+        transform: scale(0.95);
+      }
+
+      /* Memory cards */
+      .card {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 25px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 320px;
+        animation: fadeUp 0.8s ease;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Heart game */
+      #gameArea {
+        position: relative;
+        width: 100%;
+        height: 60vh;
+        overflow: hidden;
+      }
+
+      .heart {
+        position: absolute;
+        bottom: -40px;
+        font-size: 30px;
+        animation: floatUp 4s linear forwards;
+        cursor: pointer;
+      }
+
+      @keyframes floatUp {
+        from {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateY(-120vh);
+          opacity: 0;
+        }
+      }
+
+      /* Final buttons */
+      .buttons {
+        display: flex;
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      #noBtn {
+        position: relative;
+      }
+
+      /* Hearts rain */
+      .rain {
+        position: fixed;
+        top: -10px;
+        font-size: 20px;
+        animation: rain 3s linear forwards;
+      }
+
+      @keyframes rain {
+        to {
+          transform: translateY(110vh);
+          opacity: 0;
+        }
+      }
+      #screen2 h1 {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        padding: 28px 22px;
+        border-radius: 24px;
+        margin-bottom: 22px;
+        width: 100%;
+        max-width: 340px;
+        animation: fadeUp 0.9s ease;
+      }
+
+      .card .emoji {
+        font-size: 1.8rem;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .card .title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .card .text {
+        font-size: 1rem;
+        line-height: 1.6;
+        opacity: 0.95;
+      }
+      .gameTitle {
+        font-size: 2rem;
+        margin-bottom: 15px;
+      }
+
+      .meterWrap {
+        margin-bottom: 20px;
+      }
+
+      .meterText {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        opacity: 0.9;
+      }
+
+      .meter {
+        width: 220px;
+        height: 12px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 8px auto;
+      }
+
+      #meterFill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #ff4f81, #ffb6c1);
+        border-radius: 20px;
+        transition: width 0.3s ease;
+      }
+
+      .meterPercent {
+        font-size: 1rem;
+        margin-top: 5px;
+      }
+
+      #gameArea {
+        position: relative;
+        width: 100%;
+        max-width: 380px;
+        height: 55vh;
+        margin: 0 auto;
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      .heart {
+        position: absolute;
+        bottom: -40px;
+        font-size: 32px;
+        animation: floatUp 4s linear forwards;
+        cursor: pointer;
+        filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.25));
+      }
+
+      .hint {
+        margin-top: 15px;
+        font-size: 0.95rem;
+        opacity: 0.9;
+      }
+      .smallText {
+        font-size: 0.9rem;
+        opacity: 0.85;
+        margin-bottom: 10px;
+      }
+
+      .proposal {
+        font-size: 2.2rem;
+        line-height: 1.3;
+        margin-bottom: 35px;
+      }
+
+      .proposal span {
+        color: #fff;
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+      }
+
+      .buttons {
+        display: flex;
+        gap: 25px;
+        margin-top: 10px;
+      }
+
+      .yesBtn {
+        background: linear-gradient(135deg, #ff4f81, #ff9ab3);
+        color: white;
+        padding: 16px 36px;
+        border-radius: 40px;
+        font-size: 1.05rem;
+        box-shadow: 0 10px 25px rgba(255, 79, 129, 0.45);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .yesBtn:active {
+        transform: scale(0.95);
+        box-shadow: 0 5px 15px rgba(255, 79, 129, 0.4);
+      }
+
+      .noBtn {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+        padding: 14px 30px;
+        border-radius: 40px;
+        font-size: 1rem;
+        backdrop-filter: blur(8px);
+      }
+
+      .note {
+        margin-top: 25px;
+        font-size: 0.9rem;
+        opacity: 0.85;
+      }
+      .finalTitle {
+        font-size: 2rem;
+        margin-bottom: 18px;
+        text-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+      }
+
+      .finalText {
+        font-size: 1.15rem;
+        line-height: 1.8;
+        margin-bottom: 12px;
+      }
+
+      .finalText span {
+        font-weight: 600;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .finalSmall {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        margin-bottom: 30px;
+      }
+
+      .finalBtn {
+        background: rgba(255, 255, 255, 0.9);
+        color: #ff4f81;
+        padding: 14px 34px;
+        border-radius: 35px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+      }
+
+      .finalBtn:active {
+        transform: scale(0.95);
+      }
+      .secret {
+        opacity: 0;
+        font-size: 0.95rem;
+        margin-top: 10px;
+        transition: opacity 0.6s ease;
+      }
+      .popHeart {
+        position: fixed;
+        font-size: 18px;
+        pointer-events: none;
+        animation: pop 1s ease forwards;
+      }
+
+      @keyframes pop {
+        from {
+          transform: scale(0.5);
+          opacity: 1;
+        }
+        to {
+          transform: scale(1.6) translateY(-20px);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Screen 1 -->
+    <section id="screen1" class="active">
+      <h1>Hey Anu ❤️</h1>
+      <p>I made something special for you</p>
+      <button onclick="nextScreen(2)">Tap to begin 💫</button>
+      <br />
+      <p>By Nishit</p>
+    </section>
+
+    <!-- Screen 2 -->
+    <section id="screen2">
+      <h1 style="margin-bottom: 25px">Little things about us 🌷</h1>
+
+      <div class="card">
+        <span class="emoji">✨</span>
+        <p class="title">First Meet</p>
+        <p class="text">
+          The day you met me for the first time,<br />
+          something quietly changed for the better.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="emoji">💖</span>
+        <p class="title">My safe place</p>
+        <p class="text">
+          You became my comfort,<br />
+          the one I feel calm with, always.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="emoji">🌸</span>
+        <p class="title">Everyday magic</p>
+        <p class="text">
+          With you, even the most normal days<br />
+          feel a little more special.
+        </p>
+      </div>
+
+      <button onclick="nextScreen(3)">Continue 💌</button>
+    </section>
+
+    <!-- Screen 3 -->
+    <section id="screen3">
+      <h1 class="gameTitle">Catch the love 💞</h1>
+
+      <div class="meterWrap">
+        <span class="meterText">Love Meter</span>
+        <div class="meter">
+          <div id="meterFill"></div>
+        </div>
+        <p class="meterPercent"><span id="score">0</span>% full of love</p>
+      </div>
+
+      <div id="gameArea"></div>
+
+      <p class="hint">Tap the hearts before they float away ✨</p>
+    </section>
+
+    <!-- Screen 4 -->
+    <section id="screen4">
+      <h1 id="typeText"></h1>
+      <button onclick="nextScreen(5)">I’m ready ❤️</button>
+    </section>
+
+    <!-- Screen 5 -->
+    <section id="screen5">
+      <p class="smallText">Just one last thing… 🌙</p>
+
+      <h1 class="proposal">
+        Will you be <br />
+        <span>my Valentine?</span> 💘
+      </h1>
+
+      <div class="buttons">
+        <button class="yesBtn" onclick="yesClicked()">Yes, always 💖</button>
+        <button class="noBtn" id="noBtn">No 😒</button>
+      </div>
+
+      <p class="note">You already know the answer though 🤍</p>
+    </section>
+
+    <!-- Screen 6 -->
+    <section id="screen6">
+      <h1 class="finalTitle">You just made me the happiest ❤️</h1>
+
+      <p class="finalText">
+        Out of all the people,<br />
+        all the moments,<br />
+        I’m really lucky it’s <span>you</span>.
+      </p>
+
+      <p class="finalSmall">Always. ♾️</p>
+
+      <button class="finalBtn" onclick="restart()">
+        Relive this moment 💞
+      </button>
+      <p id="secretMsg" class="secret">I really mean every word I said 🤍</p>
+    </section>
+
+    <script>
+      let score = 0;
+
+      function nextScreen(n) {
+        document
+          .querySelectorAll("section")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById("screen" + n).classList.add("active");
+
+        if (n === 3) startGame();
+        if (n === 4) typeWriter();
+      }
+
+      function startGame() {
+        score = 0;
+        document.getElementById("score").innerText = score;
+        const area = document.getElementById("gameArea");
+        area.innerHTML = "";
+
+        const interval = setInterval(() => {
+          const heart = document.createElement("div");
+          heart.className = "heart";
+          heart.innerText = "❤️";
+          heart.style.left = Math.random() * 90 + "%";
+
+          heart.onclick = () => {
+            score += 10;
+            document.getElementById("score").innerText = score;
+            heart.remove();
+
+            if (score >= 100) {
+              clearInterval(interval);
+              nextScreen(4);
+            }
+          };
+
+          area.appendChild(heart);
+
+          setTimeout(() => heart.remove(), 4000);
+        }, 600);
+      }
+
+      function typeWriter() {
+        const text = "I wanted to ask you something…";
+        let i = 0;
+        const el = document.getElementById("typeText");
+        el.innerText = "";
+
+        const typing = setInterval(() => {
+          el.innerText += text.charAt(i);
+          i++;
+          if (i >= text.length) clearInterval(typing);
+        }, 80);
+      }
+
+      const noBtn = document.getElementById("noBtn");
+      noBtn.addEventListener("click", () => {
+        noBtn.style.transform = `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px)`;
+      });
+
+      function yesClicked() {
+        nextScreen(6);
+        setTimeMessage();
+
+        for (let i = 0; i < 30; i++) {
+          const rain = document.createElement("div");
+          rain.className = "rain";
+          rain.innerText = "💖";
+          rain.style.left = Math.random() * 100 + "%";
+          document.body.appendChild(rain);
+          setTimeout(() => rain.remove(), 3000);
+        }
+      }
+
+      function restart() {
+        nextScreen(1);
+      }
+      function setTimeMessage() {
+        const hour = new Date().getHours();
+        let msg = "";
+
+        if (hour < 12) msg = "Starting the day with you feels right ☀️";
+        else if (hour < 18) msg = "Evenings feel warmer with you 🌸";
+        else msg = "Ending the day thinking of you 🌙";
+
+        const el = document.querySelector(".finalSmall");
+        if (el) el.innerText = msg;
+      }
+      let tapCount = 0;
+      const finalTitle = document.querySelector(".finalTitle");
+
+      if (finalTitle) {
+        finalTitle.addEventListener("click", () => {
+          tapCount++;
+          if (tapCount === 3) {
+            document.getElementById("secretMsg").style.opacity = 1;
+          }
+        });
+      }
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("screen1").classList.contains("active"))
+          return;
+
+        const heart = document.createElement("div");
+        heart.className = "popHeart";
+        heart.innerText = "💕";
+        heart.style.left = e.clientX + "px";
+        heart.style.top = e.clientY + "px";
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1000);
+      });
+    </script>
+  </body>
+</html>
